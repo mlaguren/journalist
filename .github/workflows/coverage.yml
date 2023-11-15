@@ -1,0 +1,23 @@
+name: Test Coverage
+on: [push]
+jobs:
+  run-rspec-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          # Not needed with a .ruby-version file
+          ruby-version: 3.1.4
+          # runs 'bundle install' and caches installed gems automatically
+          bundler-cache: true
+      - name: Tests
+        run: |
+          bundle exec rspec -f d spec/
+          # Using the current repo to perform coverage analysis
+      - uses: joshmfrankel/simplecov-check-action@main
+        with:
+          minimum_suite_coverage: 85
+          minimum_file_coverage: 70
+          github_token: ${{ secrets.GITHUB_TOKEN }}
